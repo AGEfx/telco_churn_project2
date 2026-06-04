@@ -2,7 +2,6 @@
 
 [![Python 3.8+](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Jupyter Notebook](https://img.shields.io/badge/Jupyter-Notebook-orange.svg)](https://jupyter.org/)
-[![SQL](https://img.shields.io/badge/SQL-%20-blue?logo=postgresql)](https://www.postgresql.org/docs/current/tutorial.html)
 [![Docker](https://img.shields.io/badge/Docker-2CA5E0?logo=docker&logoColor=white)](https://hub.docker.com/)
 [![XGBoost](https://img.shields.io/badge/XGBoost-Used-success)](https://xgboost.readthedocs.io/)
 [![SHAP](https://img.shields.io/badge/SHAP-Interpretable-blue)](https://shap.readthedocs.io/)
@@ -63,13 +62,12 @@
 ```text
 telco-churn-project/
 ├── data/                  # raw + processed данные
-├── notebooks/             # 01_data_loading → 04_churn_modeling
+├── src/                   # 01_data_loading → 04_churn_modeling
 ├── sql/                   # Предобработка, EDA и витрины в PostgreSQL
 ├── dashboards/            # Интерактивные отчёты и визуализации
 ├── models/                # Сохранённые модели (joblib)
 ├── utils/                 # Вспомогательные скрипты
-├── Telco Customer Churn Analysis presentation.pdf
-├── docker-compose.yml
+├── Dockerfile
 ├── requirements.txt
 └── README.md
 ```
@@ -88,56 +86,16 @@ telco-churn-project/
 ### 1. Клонируй репозиторий
 
 ```bash
-git clone https://github.com/tema_kiselevv/telco-churn-project2.git
-cd telco-churn
+git clone https://github.com/tema_kiselevv/telco_churn_project2.git
+cd telco_churn_project2
 ```
 
-### 2. Установи зависимости
-
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Запусти дашборд
-
-```bash
-streamlit run app.py
-```
-
-Открой в браузере: [http://localhost:8501](http://localhost:8501)
-
----
-
-**1. Клонируйте репозиторий**  
-```console
-git clone https://github.com/temakiselevv/telco-churn-project.git  
-cd telco-churn-project
-```
 **2. Скачайте датасет и положите файл в `data/raw`**  
 Ссылка: https://www.kaggle.com/datasets/blastchar/telco-customer-churn/data  
 Файл должен находиться по пути:  
-`data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv`  
+`data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv`
 
-**3. Запустите docker-compose**  
-```console
-docker-compose up -d
-```
-Docker автоматически:  
-- Запустит PostgreSQL (порт 5433 на хосте)  
-- Смонтирует папку sql/ в /docker-entrypoint-initdb.d  
-- Автоматически выполнит все SQL-файлы при первом запуске контейнера  
-
-> После старта `docker-compose up -d` выполните следующие шаги:  
-> Проверьте выполнение SQL-скриптов
-> При первом запуске PostgreSQL автоматически выполнит все файлы из папки `sql/` в алфавитном порядке.
-> Рекомендуется проверить логи контейнера, чтобы убедиться, что все скрипты отработали успешно:
-> ```console
-> docker logs telco_postgres
-> ```
-
-**4. Откройте Jupyter Notebook или вашу IDE**   
-
-**5. Создайте и активируйте виртуальное окружение**
+**3. Создайте и активируйте виртуальное окружение**
 
 Рекомендуемая версия python для данного проекта - python 3.11.9
 
@@ -152,27 +110,24 @@ source venv/bin/activate
 # Windows
 venv\Scripts\activate
 ```
-**6. Установите необходиые зависимости:**
-```console
+
+### 4. Установи зависимости
+
+```bash
 pip install -r requirements.txt
 ```
 
-**7. Запустите Jupyter Notebooks последовательно:**  
-`notebooks/01_data_loading.ipynb`  
-`notebooks/02_eda.ipynb`  
-`notebooks/03_feature_engineering.ipynb`  
-`notebooks/04_churn_modeling.ipynb`  
+### 5. Запусти дашборд
 
-> Важно: В ноутбуках используется следующее подключение к базе:
-> ```
-> - Host: db (имя сервиса в docker-compose)
-> - Port: 5432
-> - Database: telco_churn
-> - User: postgres
-> - Password: 123
-> ```
+```bash
+streamlit run app.py
+```
 
-> Примечание: При первом запуске SQL-скрипты выполнятся автоматически благодаря монтированию папки `/sql` в `/docker-entrypoint-initdb.d`. При последующих запусках они выполняться не будут (это стандартное поведение PostgreSQL). Если нужно перезапустить инициализацию — удалите volume с помощью `docker-compose down -v` и запустите заново: `docker-compose up -d`
+Открой в браузере: [http://localhost:8501](http://localhost:8501)
+
+---
+
+
 
 ## 📈 Методология
 

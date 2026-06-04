@@ -49,3 +49,5 @@ logs/
 
 # Ignore built documentation
 docs/_build/
+
+notebooks/

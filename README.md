@@ -130,7 +130,7 @@ streamlit run app.py
 
 ```bash
 git clone https://github.com/tema_kiselevv/telco_churn_project2.git
-cd telco-churn
+cd telco_churn_project2
 ```
 
 ### 2. Собери образ

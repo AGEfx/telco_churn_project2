@@ -80,7 +80,7 @@ telco-churn-project/
 
 ### Способ 1 — Python (без Docker)
 
-#### 1. Клонируй репозиторий
+#### 1. Клонируйте репозиторий
 
 ```bash
 git clone https://github.com/tema_kiselevv/telco_churn_project2.git
@@ -108,13 +108,13 @@ source venv/bin/activate
 venv\Scripts\activate
 ```
 
-#### 4. Установи зависимости
+#### 4. Установите зависимости
 
 ```bash
 pip install -r requirements.txt
 ```
 
-#### 5. Запусти дашборд
+#### 5. Запустите дашборд
 
 ```bash
 streamlit run app.py
@@ -128,20 +128,20 @@ streamlit run app.py
 
 ### Способ 2 — Docker
 
-#### 1. Клонируй репозиторий
+#### 1. Клонируйте репозиторий
 
 ```bash
 git clone https://github.com/tema_kiselevv/telco_churn_project2.git
 cd telco_churn_project2
 ```
 
-#### 2. Собери образ
+#### 2. Соберите образ
 
 ```bash
 docker build -t telco_churn_project2 .
 ```
 
-#### 3. Запусти контейнер
+#### 3. Запустите контейнер
 
 ```bash
 docker run -p 8501:8501 telco_churn_project2

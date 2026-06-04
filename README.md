@@ -136,7 +136,7 @@ cd telco_churn_project2
 ### 2. Собери образ
 
 ```bash
-docker build -t telco_churn_project2
+docker build -t telco_churn_project2 .
 ```
 
 ### 3. Запусти контейнер

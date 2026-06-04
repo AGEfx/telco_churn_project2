@@ -73,26 +73,26 @@ telco-churn-project/
 
 ## 🚀 Как запустить проект
 
-## Требования
+### Требования
 
 - Python 3.11+  **или** Docker Desktop
 - Git
 
-## Способ 1 — Python (без Docker)
+### Способ 1 — Python (без Docker)
 
-### 1. Клонируй репозиторий
+#### 1. Клонируй репозиторий
 
 ```bash
 git clone https://github.com/tema_kiselevv/telco_churn_project2.git
 cd telco_churn_project2
 ```
 
-### 2. Скачайте датасет и положите файл в `data/raw` 
+#### 2. Скачайте датасет и положите файл в `data/raw` 
 Ссылка: https://www.kaggle.com/datasets/blastchar/telco-customer-churn/data  
 Файл должен находиться по пути:  
 `data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv`
 
-### 3. Создайте и активируйте виртуальное окружение
+#### 3. Создайте и активируйте виртуальное окружение
 
 Рекомендуемая версия python для данного проекта - python 3.11.9
 
@@ -108,13 +108,13 @@ source venv/bin/activate
 venv\Scripts\activate
 ```
 
-### 4. Установи зависимости
+#### 4. Установи зависимости
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 5. Запусти дашборд
+#### 5. Запусти дашборд
 
 ```bash
 streamlit run app.py
@@ -122,26 +122,26 @@ streamlit run app.py
 
 Открой в браузере: [http://localhost:8501](http://localhost:8501)
 
-### Остановка
+#### Остановка
 
 Нажми **Ctrl + C** в терминале.
 
-## Способ 2 — Docker
+### Способ 2 — Docker
 
-### 1. Клонируй репозиторий
+#### 1. Клонируй репозиторий
 
 ```bash
 git clone https://github.com/tema_kiselevv/telco_churn_project2.git
 cd telco_churn_project2
 ```
 
-### 2. Собери образ
+#### 2. Собери образ
 
 ```bash
 docker build -t telco_churn_project2 .
 ```
 
-### 3. Запусти контейнер
+#### 3. Запусти контейнер
 
 ```bash
 docker run -p 8501:8501 telco_churn_project2
@@ -149,7 +149,7 @@ docker run -p 8501:8501 telco_churn_project2
 
 Открой в браузере: [http://localhost:8501](http://localhost:8501)
 
-### Остановка
+#### Остановка
 
 Нажми **Ctrl + C** в терминале.
 

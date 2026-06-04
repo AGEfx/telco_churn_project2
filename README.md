@@ -76,7 +76,38 @@ telco-churn-project/
 
 ## 🚀 Как запустить проект
 
-### **Рекомендуемый способ: Через Docker Compose**
+## Требования
+
+- Python 3.11+  **или** Docker Desktop
+- Git
+
+---
+
+## Способ 1 — Python (без Docker)
+
+### 1. Клонируй репозиторий
+
+```bash
+git clone https://github.com/tema_kiselevv/telco-churn-project2.git
+cd telco-churn
+```
+
+### 2. Установи зависимости
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Запусти дашборд
+
+```bash
+streamlit run app.py
+```
+
+Открой в браузере: [http://localhost:8501](http://localhost:8501)
+
+---
+
 **1. Клонируйте репозиторий**  
 ```console
 git clone https://github.com/temakiselevv/telco-churn-project.git  

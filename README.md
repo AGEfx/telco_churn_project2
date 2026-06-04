@@ -147,18 +147,6 @@ docker run -p 8501:8501 telco_churn_project2
 
 Открой в браузере: [http://localhost:8501](http://localhost:8501)
 
-#### Запуск в фоне
-
-```bash
-docker run -d -p 8501:8501 --name telco-churn-app telco_churn_project2
-```
-
-#### Остановка
-
-```bash
-docker stop telco-churn-app
-docker rm telco-churn-app
-```
 
 ## 📈 Методология
 

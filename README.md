@@ -43,18 +43,15 @@
 ---
 
 ## 🛠 Технологический стек
-
-- **База данных и SQL-аналитика**: PostgreSQL, SQL  
+ 
 - **Python и Machine Learning**: Python 3.8+, Pandas, NumPy, SciPy
 - **Моделирование**: XGBoost, Scikit-learn
 - **Оптимизация**: Bayesian Optimization (`bayes_opt`)
 - **Интерпретируемость**: SHAP (TreeExplainer)
 - **Визуализация**: Plotly Express, Matplotlib
 - **Дополнительно**:  
-  SQLAlchemy — подключение Python к PostgreSQL  
   JSON, Joblib — сохранение моделей  
-  Docker & docker-compose — контейнеризация и воспроизводимость  
-  Jupyter Notebook  
+  Docker — контейнеризация и воспроизводимость    
 ---
 
 ## 📁 Структура проекта
@@ -63,7 +60,6 @@
 telco-churn-project/
 ├── data/                  # raw + processed данные
 ├── src/                   # 01_data_loading → 04_churn_modeling
-├── sql/                   # Предобработка, EDA и витрины в PostgreSQL
 ├── dashboards/            # Интерактивные отчёты и визуализации
 ├── models/                # Сохранённые модели (joblib)
 ├── utils/                 # Вспомогательные скрипты
@@ -90,12 +86,12 @@ git clone https://github.com/tema_kiselevv/telco_churn_project2.git
 cd telco_churn_project2
 ```
 
-**2. Скачайте датасет и положите файл в `data/raw`**  
+### 2. Скачайте датасет и положите файл в `data/raw` 
 Ссылка: https://www.kaggle.com/datasets/blastchar/telco-customer-churn/data  
 Файл должен находиться по пути:  
 `data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv`
 
-**3. Создайте и активируйте виртуальное окружение**
+### 3. Создайте и активируйте виртуальное окружение
 
 Рекомендуемая версия python для данного проекта - python 3.11.9
 
@@ -127,7 +123,41 @@ streamlit run app.py
 
 ---
 
+## Способ 2 — Docker
 
+### 1. Клонируй репозиторий
+
+```bash
+git clone https://github.com/tema_kiselevv/telco_churn_project2.git
+cd telco-churn
+```
+
+### 2. Собери образ
+
+```bash
+docker build -t telco_churn_project2
+```
+
+### 3. Запусти контейнер
+
+```bash
+docker run -p 8501:8501 telco_churn_project2
+```
+
+Открой в браузере: [http://localhost:8501](http://localhost:8501)
+
+#### Запуск в фоне
+
+```bash
+docker run -d -p 8501:8501 --name telco-churn-app telco_churn_project2
+```
+
+#### Остановка
+
+```bash
+docker stop telco-churn-app
+docker rm telco-churn-app
+```
 
 ## 📈 Методология
 

@@ -489,7 +489,7 @@ with tab4:
             st.plotly_chart(fig, use_container_width=True)
 
 
-            # SHAP (если установлен)
+            # SHAP
             st.markdown("### 🧠 SHAP Analysis")
             try:
                 import shap
@@ -641,10 +641,25 @@ with tab5:
             input_row["electronic_check_flag"] = 1 if payment == "Electronic check" else 0
             input_row["month_to_month_flag"] = 1 if contract == "Month-to-month" else 0
 
+            # Категориальные признаки
+            if "Contract" in input_row:
+                input_row["Contract"] = contract
+            if "InternetService" in input_row:
+                input_row["InternetService"] = internet
+            if "PaymentMethod" in input_row:
+                input_row["PaymentMethod"] = payment
+            if "OnlineSecurity" in input_row:
+                input_row["OnlineSecurity"] = "No" if security == "No" else "Yes"
+            if "TechSupport" in input_row:
+                input_row["TechSupport"] = "No" if tech_support == "No" else "Yes"
+            if "SeniorCitizen" in input_row:
+                input_row["SeniorCitizen"] = senior
+            if "Partner" in input_row:
+                input_row["Partner"] = partner
+    
             # Строим DataFrame
             X_pred = pd.DataFrame([input_row])[list(model.feature_names_in_)]
 
-            # Применяем правильные типы — как при обучении
             booster = model.get_booster()
             feature_types = booster.feature_types
 

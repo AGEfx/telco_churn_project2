@@ -583,144 +583,194 @@ with tab4:
 
 
 # TAB 5 — ПРЕДСКАЗАНИЕ
+# TAB 5 — ПРЕДСКАЗАНИЕ
 with tab5:
     st.subheader("🎯 Предсказание оттока для нового клиента")
 
     if model is None:
         st.error("Модель не найдена. Предсказание недоступно.")
     else:
-        st.markdown("Заполни параметры клиента и получи прогноз вероятности оттока.")
+        # Создаем две под-вкладки
+        tab_single, tab_batch = st.tabs(["👤 Индивидуальный скоринг", "📁 Пакетный скоринг"])
 
-        col1, col2, col3 = st.columns(3)
+        # Оборачиваем текущий код Артёма в первую вкладку
+        with tab_single:
+            st.markdown("Заполни параметры клиента и получи прогноз вероятности оттока.")
 
-        with col1:
-            tenure = st.slider("Tenure (месяцы)", 0, 72, 12)
-            monthly = st.slider("MonthlyCharges ($)", 20.0, 120.0, 65.0, step=0.5)
-            total_charges = st.slider("TotalCharges ($)", 0.0, 9000.0, float(monthly * tenure), step=10.0)
+            col1, col2, col3 = st.columns(3)
 
-        with col2:
-            contract = st.selectbox("Тип контракта", ["Month-to-month", "One year", "Two year"])
-            internet = st.selectbox("Интернет", ["Fiber optic", "DSL", "No"])
-            payment = st.selectbox("Способ оплаты", ["Electronic check", "Mailed check", "Bank transfer (automatic)", "Credit card (automatic)"])
+            with col1:
+                tenure = st.slider("Tenure (месяцы)", 0, 72, 12)
+                monthly = st.slider("MonthlyCharges ($)", 20.0, 120.0, 65.0, step=0.5)
+                total_charges = st.slider("TotalCharges ($)", 0.0, 9000.0, float(monthly * tenure), step=10.0)
 
-        with col3:
-            senior = st.selectbox("Senior Citizen", [0, 1], format_func=lambda x: "Да" if x else "Нет")
-            partner = st.selectbox("Partner", ["Yes", "No"])
-            security = st.selectbox("OnlineSecurity", ["Yes", "No", "No internet service"])
-            tech_support = st.selectbox("TechSupport", ["Yes", "No", "No internet service"])
+            with col2:
+                contract = st.selectbox("Тип контракта", ["Month-to-month", "One year", "Two year"])
+                internet = st.selectbox("Интернет", ["Fiber optic", "DSL", "No"])
+                payment = st.selectbox("Способ оплаты", ["Electronic check", "Mailed check", "Bank transfer (automatic)", "Credit card (automatic)"])
 
-        st.markdown("---")
+            with col3:
+                senior = st.selectbox("Senior Citizen", [0, 1], format_func=lambda x: "Да" if x else "Нет")
+                partner = st.selectbox("Partner", ["Yes", "No"])
+                security = st.selectbox("OnlineSecurity", ["Yes", "No", "No internet service"])
+                tech_support = st.selectbox("TechSupport", ["Yes", "No", "No internet service"])
 
-        if st.button("🔮 Предсказать", type="primary", use_container_width=True):
+            st.markdown("---")
 
-            # Категории точно как в обучающих данных
-            cat_categories = {
-                "MultipleLines":      ["No", "No phone service", "Yes"],
-                "InternetService":    ["DSL", "Fiber optic", "No"],
-                "OnlineSecurity":     ["No", "No internet service", "Yes"],
-                "OnlineBackup":       ["No", "No internet service", "Yes"],
-                "DeviceProtection":   ["No", "No internet service", "Yes"],
-                "TechSupport":        ["No", "No internet service", "Yes"],
-                "StreamingTV":        ["No", "No internet service", "Yes"],
-                "StreamingMovies":    ["No", "No internet service", "Yes"],
-                "Contract":           ["Month-to-month", "One year", "Two year"],
-                "PaymentMethod":      ["Bank transfer (automatic)", "Credit card (automatic)", "Electronic check", "Mailed check"],
-                "tenure_group":       ["1-6 мес", "7-12 мес", "13-24 мес", "25-36 мес", "37+ мес"],
-                "customer_type":      sorted(df["customer_type"].dropna().unique().tolist()) if "customer_type" in df.columns else [],
-            }
+            if st.button("🔮 Предсказать", type="primary", use_container_width=True):
 
-            # Собираем строку с нулями по всем признакам модели
-            input_row = {f: 0 for f in model.feature_names_in_}
+                # Категории точно как в обучающих данных
+                cat_categories = {
+                    "MultipleLines":      ["No", "No phone service", "Yes"],
+                    "InternetService":    ["DSL", "Fiber optic", "No"],
+                    "OnlineSecurity":     ["No", "No internet service", "Yes"],
+                    "OnlineBackup":       ["No", "No internet service", "Yes"],
+                    "DeviceProtection":   ["No", "No internet service", "Yes"],
+                    "TechSupport":        ["No", "No internet service", "Yes"],
+                    "StreamingTV":        ["No", "No internet service", "Yes"],
+                    "StreamingMovies":    ["No", "No internet service", "Yes"],
+                    "Contract":           ["Month-to-month", "One year", "Two year"],
+                    "PaymentMethod":      ["Bank transfer (automatic)", "Credit card (automatic)", "Electronic check", "Mailed check"],
+                    "tenure_group":       ["1-6 мес", "7-12 мес", "13-24 мес", "25-36 мес", "37+ мес"],
+                    "customer_type":      sorted(df["customer_type"].dropna().unique().tolist()) if "customer_type" in df.columns else [],
+                }
 
-            # Заполняем числовые признаки из формы
-            input_row["tenure"] = tenure
-            input_row["MonthlyCharges"] = monthly
-            input_row["TotalCharges"] = total_charges
-            input_row["SeniorCitizen"] = senior
-            input_row["fiber_optic_flag"] = 1 if internet == "Fiber optic" else 0
-            input_row["electronic_check_flag"] = 1 if payment == "Electronic check" else 0
-            input_row["month_to_month_flag"] = 1 if contract == "Month-to-month" else 0
+                # Собираем строку с нулями по всем признакам модели
+                input_row = {f: 0 for f in model.feature_names_in_}
 
-            # Категориальные признаки
-            if "Contract" in input_row:
-                input_row["Contract"] = contract
-            if "InternetService" in input_row:
-                input_row["InternetService"] = internet
-            if "PaymentMethod" in input_row:
-                input_row["PaymentMethod"] = payment
-            if "OnlineSecurity" in input_row:
-                input_row["OnlineSecurity"] = "No" if security == "No" else "Yes"
-            if "TechSupport" in input_row:
-                input_row["TechSupport"] = "No" if tech_support == "No" else "Yes"
-            if "SeniorCitizen" in input_row:
+                # Заполняем числовые признаки из формы
+                input_row["tenure"] = tenure
+                input_row["MonthlyCharges"] = monthly
+                input_row["TotalCharges"] = total_charges
                 input_row["SeniorCitizen"] = senior
-            if "Partner" in input_row:
-                input_row["Partner"] = partner
-    
-            # Строим DataFrame
-            X_pred = pd.DataFrame([input_row])[list(model.feature_names_in_)]
+                input_row["fiber_optic_flag"] = 1 if internet == "Fiber optic" else 0
+                input_row["electronic_check_flag"] = 1 if payment == "Electronic check" else 0
+                input_row["month_to_month_flag"] = 1 if contract == "Month-to-month" else 0
 
-            booster = model.get_booster()
-            feature_types = booster.feature_types
+                # Категориальные признаки
+                if "Contract" in input_row:
+                    input_row["Contract"] = contract
+                if "InternetService" in input_row:
+                    input_row["InternetService"] = internet
+                if "PaymentMethod" in input_row:
+                    input_row["PaymentMethod"] = payment
+                if "OnlineSecurity" in input_row:
+                    input_row["OnlineSecurity"] = "No" if security == "No" else "Yes"
+                if "TechSupport" in input_row:
+                    input_row["TechSupport"] = "No" if tech_support == "No" else "Yes"
+                if "SeniorCitizen" in input_row:
+                    input_row["SeniorCitizen"] = senior
+                if "Partner" in input_row:
+                    input_row["Partner"] = partner
 
-            for i, col in enumerate(X_pred.columns):
-                col_type = feature_types[i] if feature_types else None
-                if col_type == "c":
-                    cats = cat_categories.get(col)
-                    if cats:
-                        X_pred[col] = pd.Categorical(
-                            X_pred[col].astype(str),
-                            categories=cats
-                        )
+                # Строим DataFrame
+                X_pred = pd.DataFrame([input_row])[list(model.feature_names_in_)]
+
+                booster = model.get_booster()
+                feature_types = booster.feature_types
+
+                for i, col in enumerate(X_pred.columns):
+                    col_type = feature_types[i] if feature_types else None
+                    if col_type == "c":
+                        cats = cat_categories.get(col)
+                        if cats:
+                            X_pred[col] = pd.Categorical(
+                                X_pred[col].astype(str),
+                                categories=cats
+                            )
+                        else:
+                            unique_cats = sorted(df[col].dropna().astype(str).unique().tolist())
+                            X_pred[col] = pd.Categorical(
+                                X_pred[col].astype(str),
+                                categories=unique_cats
+                            )
                     else:
-                        unique_cats = sorted(df[col].dropna().astype(str).unique().tolist())
-                        X_pred[col] = pd.Categorical(
-                            X_pred[col].astype(str),
-                            categories=unique_cats
-                        )
-                else:
-                    X_pred[col] = pd.to_numeric(X_pred[col], errors="coerce").fillna(0)
+                        X_pred[col] = pd.to_numeric(X_pred[col], errors="coerce").fillna(0)
 
-            try:
-                proba = model.predict_proba(X_pred)[0][1]
-                pred = int(proba >= 0.4)
+                try:
+                    proba = model.predict_proba(X_pred)[0][1]
+                    pred = int(proba >= 0.4)
 
-                risk_color = "#ef4444" if proba >= 0.5 else "#f59e0b" if proba >= 0.3 else "#10b981"
-                risk_label = "🔴 Высокий риск" if proba >= 0.5 else "🟡 Средний риск" if proba >= 0.3 else "🟢 Низкий риск"
+                    risk_color = "#ef4444" if proba >= 0.5 else "#f59e0b" if proba >= 0.3 else "#10b981"
+                    risk_label = "🔴 Высокий риск" if proba >= 0.5 else "🟡 Средний риск" if proba >= 0.3 else "🟢 Низкий риск"
 
-                col_r1, col_r2, col_r3 = st.columns(3)
-                col_r1.metric("Вероятность оттока", f"{proba:.1%}")
-                col_r2.metric("Предсказание", "Уйдёт ❌" if pred else "Останется ✅")
-                col_r3.metric("Уровень риска", risk_label)
+                    col_r1, col_r2, col_r3 = st.columns(3)
+                    col_r1.metric("Вероятность оттока", f"{proba:.1%}")
+                    col_r2.metric("Предсказание", "Уйдёт ❌" if pred else "Останется ✅")
+                    col_r3.metric("Уровень риска", risk_label)
 
-                st.progress(float(proba), text=f"Churn probability: {proba:.1%}")
+                    st.progress(float(proba), text=f"Churn probability: {proba:.1%}")
 
-                fig = go.Figure(go.Indicator(
-                    mode="gauge+number+delta",
-                    value=proba * 100,
-                    domain={"x": [0, 1], "y": [0, 1]},
-                    title={"text": "Вероятность оттока (%)", "font": {"color": "#f1f5f9"}},
-                    gauge={
-                        "axis": {"range": [0, 100], "tickcolor": "#94a3b8"},
-                        "bar": {"color": risk_color},
-                        "bgcolor": "#1e293b",
-                        "steps": [
-                            {"range": [0, 30],  "color": "rgba(16, 185, 129, 0.2)"},   # зелёный
-                            {"range": [30, 50], "color": "rgba(245, 158, 11, 0.2)"},   # жёлтый
-                            {"range": [50, 100],"color": "rgba(239, 68, 68, 0.2)"},    # красный
-                        ],
-                        "threshold": {"line": {"color": "white", "width": 2}, "thickness": 0.75, "value": 40},
-                    },
-                    number={"suffix": "%", "font": {"color": risk_color}},
-                ))
-                gauge_style = {k: v for k, v in CHART_STYLE.items()  if k not in ("title", "title_font")}
+                    fig = go.Figure(go.Indicator(
+                        mode="gauge+number+delta",
+                        value=proba * 100,
+                        domain={"x": [0, 1], "y": [0, 1]},
+                        title={"text": "Вероятность оттока (%)", "font": {"color": "#f1f5f9"}},
+                        gauge={
+                            "axis": {"range": [0, 100], "tickcolor": "#94a3b8"},
+                            "bar": {"color": risk_color},
+                            "bgcolor": "#1e293b",
+                            "steps": [
+                                {"range": [0, 30],  "color": "rgba(16, 185, 129, 0.2)"},   # зелёный
+                                {"range": [30, 50], "color": "rgba(245, 158, 11, 0.2)"},   # жёлтый
+                                {"range": [50, 100],"color": "rgba(239, 68, 68, 0.2)"},    # красный
+                            ],
+                            "threshold": {"line": {"color": "white", "width": 2}, "thickness": 0.75, "value": 40},
+                        },
+                        number={"suffix": "%", "font": {"color": risk_color}},
+                    ))
+                    gauge_style = {k: v for k, v in CHART_STYLE.items()  if k not in ("title", "title_font")}
 
-                fig.update_layout(
-                    **gauge_style,
-                    height=300,
-                    margin=dict(t=60, b=20),
-                )
-                st.plotly_chart(fig, use_container_width=True)
+                    fig.update_layout(
+                        **gauge_style,
+                        height=300,
+                        margin=dict(t=60, b=20),
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
 
-            except Exception as e:
-                st.error(f"Ошибка предсказания: {e}")
+                except Exception as e:
+                    st.error(f"Ошибка предсказания: {e}")
+
+                # (здесь заканчивается код индивидуального скоринга Артёма)
+
+                with tab_batch:
+                    st.subheader("Массовая оценка базы клиентов")
+                    st.write("Загрузите датасет в формате `.csv` для получения предсказаний по всем абонентам сразу.")
+
+                    # Виджет для загрузки файла
+                    uploaded_file = st.file_uploader("Выберите CSV файл", type=["csv"])
+
+                    if uploaded_file is not None:
+                        try:
+                            df_batch = pd.read_csv(uploaded_file)
+                            st.info(f"Файл загружен. Количество записей: {len(df_batch)}")
+
+                            with st.expander("Посмотреть исходные данные"):
+                                st.dataframe(df_batch.head())
+
+                            if st.button("Запустить скоринг", type="primary"):
+                                with st.spinner("Модель анализирует данные..."):
+                                    # Инференс
+                                    probabilities = model.predict_proba(df_batch)[:, 1]
+                                    predictions = model.predict(df_batch)
+
+                                    # Формируем итоговый датафрейм
+                                    df_result = df_batch.copy()
+                                    df_result['Churn_Probability_%'] = (probabilities * 100).round(2)
+                                    df_result['Churn_Prediction'] = ['Уйдет' if p == 1 else 'Останется' for p in
+                                                                     predictions]
+
+                                    st.success("✅ Скоринг успешно завершен!")
+                                    st.dataframe(df_result[['Churn_Probability_%', 'Churn_Prediction']].head(10))
+
+                                    # Виджет скачивания
+                                    csv_data = df_result.to_csv(index=False).encode('utf-8')
+                                    st.download_button(
+                                        label="📥 Скачать результаты (.csv)",
+                                        data=csv_data,
+                                        file_name='churn_predictions_results.csv',
+                                        mime='text/csv'
+                                    )
+                        except Exception as e:
+                            st.error(f"Произошла ошибка при обработке файла: {e}")
+                            st.write("Убедитесь, что загружаемый датафрейм содержит все необходимые колонки.")

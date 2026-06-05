@@ -25,7 +25,7 @@ def test_risk_level_logic():
 
 
 def test_prediction_threshold():
-    """4. Тест порога отсечения (threshold = 0.4) для бинарного предсказания."""
+    """4. Тест порога отсечения (threshold = 0.4) для бинарного предсказания. """
     proba_churn = 0.45
     pred_churn = int(proba_churn >= 0.4)
     assert pred_churn == 1, "При вероятности >= 0.4 модель должна предсказывать отток (1)"

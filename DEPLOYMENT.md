@@ -14,7 +14,7 @@
 Склонируйте исходный код проекта на локальный ПК и перейдите в рабочую директорию:
 
 Bash
-git clone https://github.com/ВАШ_ЛОГИН/telco_churn_project2.git
+git clone https://github.com/AGEfx/telco_churn_project2.git
 cd telco_churn_project2
 
 2. **Создание и активация виртуального окружения (опционально, но рекомендуется):**

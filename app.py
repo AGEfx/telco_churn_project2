@@ -48,6 +48,23 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# СТИЛЬ ГРАФИКОВ
+CHART_STYLE = dict(
+    template="plotly_dark",
+    paper_bgcolor="#1e293b",
+    plot_bgcolor="#1e293b",
+    font=dict(color="#ffffff"),
+    title_font=dict(color="#ffffff"),
+    legend=dict(font=dict(color="#ffffff")),
+    xaxis=dict(
+        tickfont=dict(color="#ffffff"),
+        title=dict(font=dict(color="#ffffff")),  
+    ),
+    yaxis=dict(
+        tickfont=dict(color="#ffffff"),
+        title=dict(font=dict(color="#ffffff")),  
+    ),
+)
 
 # ПУТИ
 BASE_DIR = Path(__file__).parent
@@ -139,7 +156,7 @@ with st.sidebar:
     st.metric("Остались", f"{retained:,}")
 
     st.markdown("---")
-    st.markdown("### 🤖 Модель")
+    st.markdown("### 👾 Модель")
     st.metric("Статус", "Загружена ✅" if model else "Не найдена ❌")
     st.metric("Версий", str(len(model_infos)))
 
@@ -160,7 +177,7 @@ st.markdown("---")
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
     "📊 Обзор",
     "🔍 EDA",
-    "🤖 Модель",
+    "👾 Модель",
     "🔮 SHAP / Важность",
     "🎯 Предсказание",
 ])
@@ -190,7 +207,7 @@ with tab1:
             title="Соотношение Churn / Retained",
             hole=0.4,
         )
-        fig.update_layout(template="plotly_dark", paper_bgcolor="#1e293b", plot_bgcolor="#1e293b")
+        fig.update_layout(**CHART_STYLE)
         st.plotly_chart(fig, use_container_width=True)
 
     with col2:
@@ -212,7 +229,7 @@ with tab1:
                 labels={"rate": "Churn Rate %"},
                 text=grp["rate"].round(1).astype(str) + "%",
             )
-            fig2.update_layout(template="plotly_dark", paper_bgcolor="#1e293b", plot_bgcolor="#1e293b", coloraxis_showscale=False)
+            fig2.update_layout(**CHART_STYLE, coloraxis_showscale=False)
             fig2.update_traces(textposition="outside")
             st.plotly_chart(fig2, use_container_width=True)
 
@@ -246,7 +263,7 @@ with tab2:
                 labels={"tenure": "Месяцы"},
                 opacity=0.75,
             )
-            fig.update_layout(template="plotly_dark", paper_bgcolor="#1e293b", plot_bgcolor="#1e293b")
+            fig.update_layout(**CHART_STYLE)
             st.plotly_chart(fig, use_container_width=True)
 
         with col2:
@@ -264,7 +281,7 @@ with tab2:
                 labels={"churn_rate": "Churn Rate %", "tenure_group": "Группа"},
                 text=grp["churn_rate"].round(1).astype(str) + "%",
             )
-            fig2.update_layout(template="plotly_dark", paper_bgcolor="#1e293b", plot_bgcolor="#1e293b", coloraxis_showscale=False)
+            fig2.update_layout(**CHART_STYLE, coloraxis_showscale=False)
             fig2.update_traces(textposition="outside")
             st.plotly_chart(fig2, use_container_width=True)
 
@@ -277,7 +294,7 @@ with tab2:
                 color_discrete_map={"Yes": "#ef4444", "No": "#10b981"},
                 title="MonthlyCharges: Churn vs Retained",
             )
-            fig.update_layout(template="plotly_dark", paper_bgcolor="#1e293b", plot_bgcolor="#1e293b")
+            fig.update_layout(**CHART_STYLE)
             st.plotly_chart(fig, use_container_width=True)
 
         with col2:
@@ -290,7 +307,7 @@ with tab2:
                     title="tenure vs MonthlyCharges",
                     opacity=0.6,
                 )
-                fig2.update_layout(template="plotly_dark", paper_bgcolor="#1e293b", plot_bgcolor="#1e293b")
+                fig2.update_layout(**CHART_STYLE)
                 st.plotly_chart(fig2, use_container_width=True)
 
     elif eda_choice == "Контракт и оплата":
@@ -309,7 +326,7 @@ with tab2:
                 title=f"Churn Rate по {cat}",
                 text=grp["Churn Rate %"].round(1).astype(str) + "%",
             )
-            fig.update_layout(template="plotly_dark", paper_bgcolor="#1e293b", plot_bgcolor="#1e293b", coloraxis_showscale=False)
+            fig.update_layout(**CHART_STYLE, coloraxis_showscale=False)
             fig.update_traces(textposition="outside")
             st.plotly_chart(fig, use_container_width=True)
 
@@ -333,7 +350,7 @@ with tab2:
             color_discrete_sequence=px.colors.qualitative.Set2,
             title="Churn Rate по наличию услуг",
         )
-        fig.update_layout(template="plotly_dark", paper_bgcolor="#1e293b", plot_bgcolor="#1e293b")
+        fig.update_layout(**CHART_STYLE)
         st.plotly_chart(fig, use_container_width=True)
 
     elif eda_choice == "Демография":
@@ -346,7 +363,7 @@ with tab2:
             fig = px.bar(grp, x=col, y="Churn Rate %", title=f"Churn по {col}",
                          color="Churn Rate %", color_continuous_scale=["#10b981", "#ef4444"],
                          text=grp["Churn Rate %"].round(1).astype(str) + "%")
-            fig.update_layout(template="plotly_dark", paper_bgcolor="#1e293b", plot_bgcolor="#1e293b",
+            fig.update_layout(**CHART_STYLE,
                                coloraxis_showscale=False, height=300)
             fig.update_traces(textposition="outside")
             cols[i].plotly_chart(fig, use_container_width=True)
@@ -361,14 +378,14 @@ with tab2:
                 title="Корреляционная матрица числовых признаков",
                 aspect="auto",
             )
-            fig.update_layout(template="plotly_dark", paper_bgcolor="#1e293b", plot_bgcolor="#1e293b",
+            fig.update_layout(**CHART_STYLE,
                                height=600)
             st.plotly_chart(fig, use_container_width=True)
 
 
 # TAB 3 — МОДЕЛЬ
 with tab3:
-    st.subheader("🤖 Результаты моделирования XGBoost")
+    st.subheader("👾 Результаты моделирования XGBoost")
 
     if model_infos:
         # Берём последний запуск
@@ -422,8 +439,8 @@ with tab3:
                             mode="lines+markers",
                         ))
                 fig.update_layout(
-                    title="Эволюция метрик по версиям модели",
-                    template="plotly_dark", paper_bgcolor="#1e293b", plot_bgcolor="#1e293b",
+                    **CHART_STYLE,
+                    title=dict(text="Эволюция метрик по версиям модели", font=dict(color="#ffffff")),
                     xaxis_tickangle=-45, height=400,
                 )
                 st.plotly_chart(fig, use_container_width=True)
@@ -466,29 +483,79 @@ with tab4:
                 labels={"importance": "Важность", "feature": "Признак"},
             )
             fig.update_layout(
-                template="plotly_dark", paper_bgcolor="#1e293b", plot_bgcolor="#1e293b",
+                **CHART_STYLE,
                 height=600, coloraxis_showscale=False,
             )
             st.plotly_chart(fig, use_container_width=True)
+
 
             # SHAP (если установлен)
             st.markdown("### 🧠 SHAP Analysis")
             try:
                 import shap
 
-                num_cols_model = df.select_dtypes(include=[np.number]).columns.tolist()
-                X_sample = df[num_cols_model].dropna().sample(min(500, len(df)), random_state=42)
-
-                # Фильтруем только признаки, которые знает модель
                 if hasattr(model, "feature_names_in_"):
-                    known = [c for c in model.feature_names_in_ if c in X_sample.columns]
-                    X_sample = X_sample[known]
+                    known_features = list(model.feature_names_in_)
+                    available = [c for c in known_features if c in df.columns]
+                    missing = [c for c in known_features if c not in df.columns]
 
-                if not X_sample.empty and X_sample.shape[1] > 0:
+                    X_sample = df[available].dropna().sample(min(200, len(df)), random_state=42).copy()
+
+                    for col in missing:
+                        X_sample[col] = 0
+
+                    X_sample = X_sample[known_features]
+
+                    booster = model.get_booster()
+                    feature_types = booster.feature_types
+
+                    # Категории точно как в обучающих данных
+                    cat_categories = {
+                        "MultipleLines":      ["No", "No phone service", "Yes"],
+                        "InternetService":    ["DSL", "Fiber optic", "No"],
+                        "OnlineSecurity":     ["No", "No internet service", "Yes"],
+                        "OnlineBackup":       ["No", "No internet service", "Yes"],
+                        "DeviceProtection":   ["No", "No internet service", "Yes"],
+                        "TechSupport":        ["No", "No internet service", "Yes"],
+                        "StreamingTV":        ["No", "No internet service", "Yes"],
+                        "StreamingMovies":    ["No", "No internet service", "Yes"],
+                        "Contract":           ["Month-to-month", "One year", "Two year"],
+                        "PaymentMethod":      ["Bank transfer (automatic)", "Credit card (automatic)", "Electronic check", "Mailed check"],
+                        "tenure_group":       ["1-6 мес", "7-12 мес", "13-24 мес", "25-36 мес", "37+ мес"],
+                        "customer_type":      sorted(df["customer_type"].dropna().unique().tolist()) if "customer_type" in df.columns else [],
+                    }
+
+                    for i, col in enumerate(X_sample.columns):
+                        col_type = feature_types[i] if feature_types else None
+                        if col_type == "c":
+                            cats = cat_categories.get(col)
+                            if cats:
+                                X_sample[col] = pd.Categorical(
+                                    X_sample[col].astype(str),
+                                    categories=cats
+                                )
+                            else:
+                                # Если категории неизвестны — берём из df
+                                unique_cats = sorted(df[col].dropna().astype(str).unique().tolist())
+                                X_sample[col] = pd.Categorical(
+                                    X_sample[col].astype(str),
+                                    categories=unique_cats
+                                )
+                        else:
+                            X_sample[col] = pd.to_numeric(X_sample[col], errors="coerce").fillna(0)
+
+                if not X_sample.empty:
                     explainer = shap.TreeExplainer(model)
                     shap_values = explainer.shap_values(X_sample)
 
-                    shap_importance = np.abs(shap_values).mean(axis=0)
+                    if isinstance(shap_values, list):
+                        vals = shap_values[1]
+                    elif shap_values.ndim == 3:
+                        vals = shap_values[:, :, 1]
+                    else:
+                        vals = shap_values
+
+                    shap_importance = np.abs(vals).mean(axis=0)
                     shap_df = pd.DataFrame({
                         "feature": X_sample.columns,
                         "shap_importance": shap_importance,
@@ -500,13 +567,10 @@ with tab4:
                         color="shap_importance", color_continuous_scale="Plasma",
                         labels={"shap_importance": "Mean |SHAP|", "feature": "Признак"},
                     )
-                    fig2.update_layout(
-                        template="plotly_dark", paper_bgcolor="#1e293b", plot_bgcolor="#1e293b",
-                        height=500, coloraxis_showscale=False,
-                    )
+                    fig2.update_layout(**CHART_STYLE, height=500, coloraxis_showscale=False)
                     st.plotly_chart(fig2, use_container_width=True)
                 else:
-                    st.info("Нет подходящих числовых признаков для SHAP.")
+                    st.info("Нет подходящих признаков для SHAP.")
             except ImportError:
                 st.info("💡 Установи `shap` для SHAP-анализа: `pip install shap`")
             except Exception as e:
@@ -548,34 +612,63 @@ with tab5:
         st.markdown("---")
 
         if st.button("🔮 Предсказать", type="primary", use_container_width=True):
-            # Собираем признаки в том же формате, что умеет модель
-            input_dict = {
-                "tenure": tenure,
-                "MonthlyCharges": monthly,
-                "TotalCharges": total_charges,
-                "SeniorCitizen": senior,
+
+            # Категории точно как в обучающих данных
+            cat_categories = {
+                "MultipleLines":      ["No", "No phone service", "Yes"],
+                "InternetService":    ["DSL", "Fiber optic", "No"],
+                "OnlineSecurity":     ["No", "No internet service", "Yes"],
+                "OnlineBackup":       ["No", "No internet service", "Yes"],
+                "DeviceProtection":   ["No", "No internet service", "Yes"],
+                "TechSupport":        ["No", "No internet service", "Yes"],
+                "StreamingTV":        ["No", "No internet service", "Yes"],
+                "StreamingMovies":    ["No", "No internet service", "Yes"],
+                "Contract":           ["Month-to-month", "One year", "Two year"],
+                "PaymentMethod":      ["Bank transfer (automatic)", "Credit card (automatic)", "Electronic check", "Mailed check"],
+                "tenure_group":       ["1-6 мес", "7-12 мес", "13-24 мес", "25-36 мес", "37+ мес"],
+                "customer_type":      sorted(df["customer_type"].dropna().unique().tolist()) if "customer_type" in df.columns else [],
             }
 
-            # One-hot / label encoding наивно — берём числовые признаки, которые знает модель
-            if hasattr(model, "feature_names_in_"):
-                input_row = {f: 0 for f in model.feature_names_in_}
-                for k, v in input_dict.items():
-                    if k in input_row:
-                        input_row[k] = v
+            # Собираем строку с нулями по всем признакам модели
+            input_row = {f: 0 for f in model.feature_names_in_}
 
-                # Флаги из данных проекта
-                input_row["fiber_optic_flag"] = 1 if internet == "Fiber optic" else 0
-                input_row["electronic_check_flag"] = 1 if payment == "Electronic check" else 0
-                input_row["month_to_month_flag"] = 1 if contract == "Month-to-month" else 0
+            # Заполняем числовые признаки из формы
+            input_row["tenure"] = tenure
+            input_row["MonthlyCharges"] = monthly
+            input_row["TotalCharges"] = total_charges
+            input_row["SeniorCitizen"] = senior
+            input_row["fiber_optic_flag"] = 1 if internet == "Fiber optic" else 0
+            input_row["electronic_check_flag"] = 1 if payment == "Electronic check" else 0
+            input_row["month_to_month_flag"] = 1 if contract == "Month-to-month" else 0
 
-                X_pred = pd.DataFrame([input_row])[model.feature_names_in_]
-            else:
-                # Если нет feature_names_in_, пробуем просто числа
-                X_pred = pd.DataFrame([input_dict])
+            # Строим DataFrame
+            X_pred = pd.DataFrame([input_row])[list(model.feature_names_in_)]
+
+            # Применяем правильные типы — как при обучении
+            booster = model.get_booster()
+            feature_types = booster.feature_types
+
+            for i, col in enumerate(X_pred.columns):
+                col_type = feature_types[i] if feature_types else None
+                if col_type == "c":
+                    cats = cat_categories.get(col)
+                    if cats:
+                        X_pred[col] = pd.Categorical(
+                            X_pred[col].astype(str),
+                            categories=cats
+                        )
+                    else:
+                        unique_cats = sorted(df[col].dropna().astype(str).unique().tolist())
+                        X_pred[col] = pd.Categorical(
+                            X_pred[col].astype(str),
+                            categories=unique_cats
+                        )
+                else:
+                    X_pred[col] = pd.to_numeric(X_pred[col], errors="coerce").fillna(0)
 
             try:
                 proba = model.predict_proba(X_pred)[0][1]
-                pred = int(proba >= 0.4)  # порог 0.4 как в проекте
+                pred = int(proba >= 0.4)
 
                 risk_color = "#ef4444" if proba >= 0.5 else "#f59e0b" if proba >= 0.3 else "#10b981"
                 risk_label = "🔴 Высокий риск" if proba >= 0.5 else "🟡 Средний риск" if proba >= 0.3 else "🟢 Низкий риск"
@@ -585,10 +678,8 @@ with tab5:
                 col_r2.metric("Предсказание", "Уйдёт ❌" if pred else "Останется ✅")
                 col_r3.metric("Уровень риска", risk_label)
 
-                # Прогресс-бар
-                st.progress(proba, text=f"Churn probability: {proba:.1%}")
+                st.progress(float(proba), text=f"Churn probability: {proba:.1%}")
 
-                # Gauge chart
                 fig = go.Figure(go.Indicator(
                     mode="gauge+number+delta",
                     value=proba * 100,
@@ -599,20 +690,22 @@ with tab5:
                         "bar": {"color": risk_color},
                         "bgcolor": "#1e293b",
                         "steps": [
-                            {"range": [0, 30], "color": "#10b98130"},
-                            {"range": [30, 50], "color": "#f59e0b30"},
-                            {"range": [50, 100], "color": "#ef444430"},
+                            {"range": [0, 30],  "color": "rgba(16, 185, 129, 0.2)"},   # зелёный
+                            {"range": [30, 50], "color": "rgba(245, 158, 11, 0.2)"},   # жёлтый
+                            {"range": [50, 100],"color": "rgba(239, 68, 68, 0.2)"},    # красный
                         ],
                         "threshold": {"line": {"color": "white", "width": 2}, "thickness": 0.75, "value": 40},
                     },
                     number={"suffix": "%", "font": {"color": risk_color}},
                 ))
+                gauge_style = {k: v for k, v in CHART_STYLE.items()  if k not in ("title", "title_font")}
+
                 fig.update_layout(
-                    template="plotly_dark", paper_bgcolor="#1e293b",
-                    height=300, margin=dict(t=60, b=20),
+                    **gauge_style,
+                    height=300,
+                    margin=dict(t=60, b=20),
                 )
                 st.plotly_chart(fig, use_container_width=True)
 
             except Exception as e:
                 st.error(f"Ошибка предсказания: {e}")
-                st.info("Возможно, входные признаки не совпадают с обучающими. Проверь feature_names_in_ модели.")

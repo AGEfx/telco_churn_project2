@@ -52,7 +52,8 @@
 - **Визуализация**: Plotly Express, Matplotlib
 - **Дополнительно**:  
   JSON, Joblib — сохранение моделей  
-  Docker — контейнеризация и воспроизводимость    
+  Docker — контейнеризация и воспроизводимость
+      
 ---
 
 ## 📁 Структура проекта
@@ -68,31 +69,30 @@ telco-churn-project/
 ├── requirements.txt
 └── README.md
 ```
+---
 
 ## 🚀 Как запустить проект
 
-## Требования
+### Требования
 
 - Python 3.11+  **или** Docker Desktop
 - Git
 
----
+### Способ 1 — Python (без Docker)
 
-## Способ 1 — Python (без Docker)
-
-### 1. Клонируй репозиторий
+#### 1. Клонируйте репозиторий
 
 ```bash
 git clone https://github.com/tema_kiselevv/telco_churn_project2.git
 cd telco_churn_project2
 ```
 
-### 2. Скачайте датасет и положите файл в `data/raw` 
+#### 2. Скачайте датасет и положите файл в `data/raw` 
 Ссылка: https://www.kaggle.com/datasets/blastchar/telco-customer-churn/data  
 Файл должен находиться по пути:  
 `data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv`
 
-### 3. Создайте и активируйте виртуальное окружение
+#### 3. Создайте и активируйте виртуальное окружение
 
 Рекомендуемая версия python для данного проекта - python 3.11.9
 
@@ -108,13 +108,13 @@ source venv/bin/activate
 venv\Scripts\activate
 ```
 
-### 4. Установи зависимости
+#### 4. Установите зависимости
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 5. Запусти дашборд
+#### 5. Запустите дашборд
 
 ```bash
 streamlit run app.py
@@ -122,24 +122,26 @@ streamlit run app.py
 
 Открой в браузере: [http://localhost:8501](http://localhost:8501)
 
----
+#### Остановка
 
-## Способ 2 — Docker
+Нажми **Ctrl + C** в терминале.
 
-### 1. Клонируй репозиторий
+### Способ 2 — Docker
+
+#### 1. Клонируйте репозиторий
 
 ```bash
 git clone https://github.com/tema_kiselevv/telco_churn_project2.git
 cd telco_churn_project2
 ```
 
-### 2. Собери образ
+#### 2. Соберите образ
 
 ```bash
-docker build -t telco_churn_project2
+docker build -t telco_churn_project2 .
 ```
 
-### 3. Запусти контейнер
+#### 3. Запустите контейнер
 
 ```bash
 docker run -p 8501:8501 telco_churn_project2
@@ -147,18 +149,11 @@ docker run -p 8501:8501 telco_churn_project2
 
 Открой в браузере: [http://localhost:8501](http://localhost:8501)
 
-#### Запуск в фоне
-
-```bash
-docker run -d -p 8501:8501 --name telco-churn-app telco_churn_project2
-```
-
 #### Остановка
 
-```bash
-docker stop telco-churn-app
-docker rm telco-churn-app
-```
+Нажми **Ctrl + C** в терминале.
+
+---
 
 ## 📈 Методология
 
@@ -170,13 +165,17 @@ docker rm telco-churn-app
 * Тюнинг порога для максимизации F1-score
 * Интерпретация с помощью SHAP (глобальная + локальная)
 
+---
+
 📌 Ключевые особенности проекта
 
 * Воспроизводимость через Docker
-* Комбинация SQL и Python пайплайна
+* Реализованный фронтенд
 * Высокая интерпретируемость модели (SHAP)
 * Бизнес-ориентированные insights и рекомендации
 * Чистая, модульная структура проекта
+
+---
 
 ## Дополнительные материалы
 
